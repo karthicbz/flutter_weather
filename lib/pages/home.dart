@@ -59,6 +59,7 @@ class _homeState extends State<home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.grey[300],
       appBar: AppBar(
         title: Text('WeatherApp'),
@@ -67,7 +68,7 @@ class _homeState extends State<home> {
       ),
       body: Column(
         children: [
-          SizedBox(height: 20,),
+          // SizedBox(height: 20,),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: new TextField(
