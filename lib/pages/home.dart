@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weather_app/services/get_weather_details.dart';
+import 'package:weather_app/pages/forecast.dart';
 
 class home extends StatefulWidget {
   const home({super.key});
@@ -84,10 +85,16 @@ class _homeState extends State<home> {
           ),
           TextButton(onPressed: ()async{
             setWeatherData();
-          }, child: Text('Search'), style: ButtonStyle(
+          }, child: Text('Search', style: TextStyle(fontSize: 17),),
+            style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all<Color>(Colors.orange.shade100),
             foregroundColor: MaterialStateProperty.all<Color>(Colors.deepOrange),
-            padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.symmetric(vertical: 20, horizontal: 160)),
+            padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.symmetric(vertical: 16, horizontal: 160)),
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50),
+                )
+              )
           ),),
           fetchedWeatherDetails['imageId'] != ''?Image(image: NetworkImage('https://openweathermap.org/img/wn/${fetchedWeatherDetails['imageId']}@2x.png')):Container(),
           Text("${fetchedWeatherDetails["desc"]}", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),),
@@ -128,7 +135,12 @@ class _homeState extends State<home> {
             ],
           ),
           SizedBox(height: 30,),
-          TextButton.icon(onPressed: (){}, icon: Icon(Icons.arrow_forward), label: Text("Get Forecast for ${myController.text}")),
+          TextButton.icon(
+              onPressed: (){
+                Navigator.pushNamed(context, "/forecast");
+              },
+              icon: Icon(Icons.arrow_forward),
+              label: Text("Get Forecast for ${myController.text}")),
         ],
       ),
     );
