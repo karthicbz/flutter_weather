@@ -11,11 +11,19 @@ class home extends StatefulWidget {
 class _homeState extends State<home> {
   // CurrentWeather weather = CurrentWeather("chennai");
   TextEditingController myController = TextEditingController();
-  Map fetchedWeatherDetails = {'imageId':'', 'temp':'', 'feelsLike':'', 'tempMin':'', 'tempMax':'', 'humidity':''};
+  Map fetchedWeatherDetails = {
+    'imageId':'',
+    'temp':'',
+    'feelsLike':'',
+    'tempMin':'',
+    'tempMax':'',
+    'humidity':'',
+    'desc':'',
+  };
 
-  Future<void> setInitialData() async{
+  Future<void> setWeatherData() async{
     try {
-      myController = TextEditingController(text: "chennai");
+      if(myController.text == ''){myController = TextEditingController(text: "chennai");}
       CurrentWeather weather = CurrentWeather(myController.text);
       var data = await weather.getCurrentWeather();
       setState(() {
@@ -26,6 +34,7 @@ class _homeState extends State<home> {
         fetchedWeatherDetails["tempMin"] = data["main"]["temp_min"].toString();
         fetchedWeatherDetails["tempMax"] = data["main"]["temp_max"].toString();
         fetchedWeatherDetails["humidity"] = data["main"]["humidity"].toString();
+        fetchedWeatherDetails["desc"] = data["weather"][0]["description"].toString();
       });
     }catch(e){
       print('error happened $e');
@@ -36,7 +45,7 @@ class _homeState extends State<home> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    setInitialData();
+    setWeatherData();
   }
 
   @override
@@ -74,24 +83,15 @@ class _homeState extends State<home> {
             ),
           ),
           TextButton(onPressed: ()async{
-            var location = myController.text;
-            CurrentWeather weather = CurrentWeather(location.toString());
-            var data = await weather.getCurrentWeather();
-            setState(() {
-              // imageId = data['weather'][0]['icon'];
-              fetchedWeatherDetails["imageId"] = data["weather"][0]["icon"];
-              fetchedWeatherDetails["temp"] = data["main"]["temp"].toString();
-              fetchedWeatherDetails["feelsLike"] = data["main"]["feels_like"].toString();
-              fetchedWeatherDetails["tempMin"] = data["main"]["temp_min"].toString();
-              fetchedWeatherDetails["tempMax"] = data["main"]["temp_max"].toString();
-              fetchedWeatherDetails["humidity"] = data["main"]["humidity"].toString();
-            });
+            setWeatherData();
           }, child: Text('Search'), style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all<Color>(Colors.orange.shade100),
             foregroundColor: MaterialStateProperty.all<Color>(Colors.deepOrange),
             padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.symmetric(vertical: 20, horizontal: 160)),
           ),),
           fetchedWeatherDetails['imageId'] != ''?Image(image: NetworkImage('https://openweathermap.org/img/wn/${fetchedWeatherDetails['imageId']}@2x.png')):Container(),
+          Text("${fetchedWeatherDetails["desc"]}", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),),
+          SizedBox(height: 10,),
           Text(fetchedWeatherDetails["temp"] != ''?"${fetchedWeatherDetails["temp"]} \u00b0C":'',
             style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.orange),),
           SizedBox(height: 20,),
@@ -126,7 +126,9 @@ class _homeState extends State<home> {
                 ],
               )
             ],
-          )
+          ),
+          SizedBox(height: 30,),
+          TextButton.icon(onPressed: (){}, icon: Icon(Icons.arrow_forward), label: Text("Get Forecast for ${myController.text}")),
         ],
       ),
     );
