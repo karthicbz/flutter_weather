@@ -18,4 +18,12 @@ class CurrentWeather{
       throw 'Something went wrong $e';
     }
   }
+
+  Future<Map> getForecast() async{
+    try{
+      var response = await http.get(Uri.parse('https://api.openweathermap.org/data/2.5/forecast?q=${location}&units=${unit}&APPID=${apiKey}'));
+      var jsonResponse = jsonDecode(response.body);
+      return jsonResponse;
+    }catch(e){throw 'Something went wrong $e';}
+  }
 }

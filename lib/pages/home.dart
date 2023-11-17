@@ -137,7 +137,7 @@ class _homeState extends State<home> {
           SizedBox(height: 30,),
           TextButton.icon(
               onPressed: (){
-                Navigator.pushNamed(context, "/forecast");
+                Navigator.pushNamed(context, "/forecast", arguments: {'location':myController.text.toString()});
               },
               icon: Icon(Icons.arrow_forward),
               label: Text("Get Forecast for ${myController.text}")),
